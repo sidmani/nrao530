@@ -1,27 +1,27 @@
+const three = require('three');
 const BlackHole = require('./blackHole');
-const Detector = require('./detector');
-const Vector = require('./vector');
 
 class Simulation {
-  constructor(pAxis, pAngle, rOffset, rRate) {
-    this.hole = new BlackHole(pAxis, pAngle, rOffset, rRate);
-    this.detectors = [];
+  constructor(pAxis, rAxis, rRate) {
+    this.hole = new BlackHole(pAxis, rAxis, rRate);
   }
 }
 
-Simulation.prototype.addDetector = function (position, resX, resY) {
-  this.detectors.push(new Detector(position, resX, resY));
-};
-
-Simulation.prototype.increment = function() {
+Simulation.prototype.increment = function increment() {
   this.hole.increment();
 };
 
-const s = new Simulation(new Vector(1, 0, 0), 1, 0, 0.01);
-console.log(s.hole.c);
-console.log(s.hole.d);
-for (let i = 0; i < 5; i++) {
-  console.log(s.hole.rAngle);
-  console.log(s.hole.rAxis);
-  s.increment();
-}
+Simulation.prototype.add3DVisualizer = function add3DVisualizer(width, height) {
+  this.scene = new three.Scene();
+  this.camera = new three.PerspectiveCamera(75, width / height, 0.1, 1000);
+  this.camera.position.set(0, 0, 100);
+  this.camera.lookAt(0, 0, 0);
+  this.renderer = new three.WebGLRenderer();
+  this.renderer.setSize(width, height);
+
+  this.hole.objects.forEach(o => this.scene.add(o));
+  return this.renderer;
+};
+
+module.exports.Controller = Simulation;
+module.exports.gfx = three;

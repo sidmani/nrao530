@@ -2,7 +2,18 @@
 <head>
   <title>NRAO-530 Simulation</title>
   <script src="bundle.js"></script>
+  <style>
+    body { margin: 0; }
+    canvas { width: 100%; height: 100% }
+  </style>
+
 </head>
 <body>
-  <h1>NRAO-530</h1>
+<h1></h1>
+<script>
+    const s = new sim.Controller(new sim.gfx.Vector3(1, 0, 0), new sim.gfx.Vector3(1, 1, 1), 0.1);
+    const renderer = s.add3DVisualizer(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+    renderer.render(s.scene, s.camera);
+</script>
 </body>

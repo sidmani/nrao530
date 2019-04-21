@@ -1,5 +1,3 @@
-const Vector = require('./vector');
-
 class Matter {
   constructor(velocity, position, mass) {
     this.velocity = velocity;
