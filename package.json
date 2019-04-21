@@ -1,0 +1,18 @@
+{
+  "name": "nrao530",
+  "version": "0.0.1",
+  "description": "Simulation of jets emitted from black hole NRAO-530",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify src/main.js > gen/bundle.js"
+  },
+  "author": "Sid Mani",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.2",
+    "tap": "^12.6.2"
+  }
+}
