@@ -1,1 +1,50 @@
+body {
+  overflow: hidden;
+  margin: 0px;
+}
 
+.header {
+  height: 50px;
+  width: 100%;
+  font-family: monospace;
+  color: #ccc;
+  background-color: #111;
+  text-align: left;
+  line-height: 50px;
+}
+
+.sim {
+  height: 100%;
+  width: 100%;
+}
+
+.btn {
+  border: 1px solid #ff9800;
+  padding: 3px 5px 3px 5px;
+  text-decoration: none;
+  color: #ff9800;
+  font-family: monospace;
+  margin: 0px 5px 0px 5px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.btn:hover {
+  color: black;
+  background-color: #ff9800;
+}
+
+.data {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+}
+
+.settingsContainer {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+}
+
+.settings {
+  background-color: #0f0;
+}

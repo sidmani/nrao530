@@ -1,19 +1,66 @@
 <!doctype html>
 <head>
   <title>NRAO-530 Simulation</title>
-  <script src="bundle.js"></script>
-  <style>
-    body { margin: 0; }
-    canvas { width: 100%; height: 100% }
-  </style>
-
+  <script type="application/javascript" src="bundle.js"></script>
+  <script type="application/javascript" src="stats.js"></script>
+  <link rel="stylesheet" href="main.css" type="text/css">
 </head>
 <body>
-<h1></h1>
+  <span class="settingsContainer"><a class="btn" href="#" id="btn_settings" onclick="toggleSettings()">settings</a></span>
+  <div class="sim" id="sim">
+    <span class="data">
+      <a class="btn" id="btn_play" href="#" onclick="toggleAnimation()">run</a>
+      <a class="btn btn_step" href="#" onclick="step()">step</a>
+      <a class="btn btn_reset" href="#">reset</a>
+    </span>
+  </div>
+  <div class="settings" id="settings"></div>
 <script>
-    const s = new sim.Controller(new sim.gfx.Vector3(1, 0, 0), new sim.gfx.Vector3(1, 1, 1), 0.1);
+    const s = new sim.Controller(new sim.gfx.Vector3(1, 0, 0), new sim.gfx.Vector3(1, 1, 0), 0.1);
     const renderer = s.add3DVisualizer(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+    document.getElementById('sim').appendChild(renderer.domElement);
     renderer.render(s.scene, s.camera);
+
+    window.addEventListener('resize', function () {
+        s.camera.aspect = window.innerWidth / window.innerHeight;
+        s.camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.render(s.scene, s.camera);
+    });
+
+    function toggleSettings() {
+      const settingsDiv = document.getElementById('settings');
+      const settingsBtn = document.getElementById('btn_settings');
+      const simDiv = document.getElementById('sim');
+      if (settingsDiv.style.display = 'none') {
+        if (shouldAnimate) toggleAnimation();
+        settingsDiv.style.display = 'block';
+        simDiv.style.display = 'none';
+        settingsBtn.innerHTML = 'save';
+      } else {
+        settingsDiv.style.display = 'none';
+        simDiv.style.display = 'block';
+        settingsBtn.innerHTML = 'settings';
+      }
+    }
+
+    let shouldAnimate = false;
+    function toggleAnimation() {
+      shouldAnimate = !shouldAnimate;
+      document.getElementById('btn_play').innerHTML = shouldAnimate ? 'stop' : 'run';
+    }
+
+    function step() {
+      s.increment();
+      renderer.render(s.scene, s.camera);
+    }
+
+    function animate() {
+      if (shouldAnimate) {
+        step();
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
 </script>
 </body>

@@ -1,4 +1,5 @@
 const {
+  Vector3,
   SphereBufferGeometry,
   BufferGeometry,
   MeshBasicMaterial,
@@ -11,7 +12,7 @@ const {
 
 const Matter = require('./matter');
 
-const emissionVelocity = 0.01; // fraction of c
+const emissionVelocity = 10;
 
 class BlackHole {
   constructor(pAxis, rAxis, rRate) {
@@ -19,7 +20,7 @@ class BlackHole {
     this.rRate = rRate; // rate of precession (rad / Kyr)
     this.rAxis = rAxis.normalize();
     this.rAngle = 0;
-
+    this.jets = [];
     // setup graphics
     this.objects = [];
 
@@ -56,8 +57,10 @@ BlackHole.prototype.precess = function precess() {
 
 // emit a single matter unit
 BlackHole.prototype.emit = function emit() {
-  this.jets.push(new Matter(Vector.scale(this.rAxis, emissionVelocity), Vector.zero(), 1));
-  this.jets.push(new Matter(Vector.scale(this.rAxis, -emissionVelocity), Vector.zero(), 1));
+  const m = new Matter(this.rAxis.clone().multiplyScalar(emissionVelocity), new Vector3(), 1);
+  const m2 = new Matter(this.rAxis.clone().multiplyScalar(-emissionVelocity), new Vector3(), 1);
+  this.jets.push(m, m2);
+  return [m, m2];
 };
 
 BlackHole.prototype.increment = function increment() {
@@ -66,6 +69,7 @@ BlackHole.prototype.increment = function increment() {
   }
 
   this.precess();
+  return this.emit();
 };
 
 module.exports = BlackHole;
