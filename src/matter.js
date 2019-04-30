@@ -5,8 +5,9 @@ class Matter {
     this.velocity = velocity;
     this.position = position;
     this.mass = mass;
-
-    const material = new three.MeshBasicMaterial({ color: 0xff0000 });
+    const toObserver = (new three.Vector3()).subVectors(new three.Vector3(0, 0, 1000), this.position);
+    const brightness = (128 + 127 * Math.cos(velocity.angleTo(toObserver))) << 16;
+    const material = new three.MeshBasicMaterial({ color: brightness });
     const sphere = new three.Mesh(new three.SphereBufferGeometry(5, 16, 16), material);
     sphere.position.copy(position);
 

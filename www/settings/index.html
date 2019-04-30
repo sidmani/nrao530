@@ -1,0 +1,52 @@
+<head>
+  <title>NRAO-530 Simulation</title>
+  <script src="/settings.js"></script>
+  <link rel="stylesheet" href="/main.css" type="text/css">
+  <link rel="stylesheet" href="settings.css" type="text/css">
+  <script>
+    let temp = Settings.get();
+    const items = ['showFPS', 'showPAxis', 'showRAxis'];
+    function save() {
+      Settings.set(temp);
+      window.location = '/';
+    }
+
+    function reset() {
+      temp = Settings.default;
+      applyToInterface();
+    }
+
+    function applyToInterface() {
+      items.forEach(i => {
+        console.log(i);
+        const el = document.getElementById(i);
+        const type = el.getAttribute('type');
+        switch (type) {
+          case 'checkbox':
+            el.checked = items[i];
+            break;
+        }
+      });
+    }
+  </script>
+</head>
+<body>
+  <span class="settingsContainer">
+    <a class="btn" href="#" onclick="reset()">reset</a>
+    <a class="btn" href="#" onclick="save()">save</a>
+  </span>
+  <div class="container">
+    <div class="settingsGroup">
+      <p class="title">view</p><br>
+      <label><input type="checkbox" id="showFPS">Show FPS</label>
+      <label><input type="checkbox" id="showPAxis">Show precession axis</label>
+      <label><input type="checkbox" id="showRAxis">Show rotation axis</label>
+    </div>
+    <div class="settingsGroup">
+      <p class="title">parameters</p>
+    </div>
+    <div class="settingsGroup">
+      <p class="title">simulation</p>
+    </div>
+  </div>
+</body>
