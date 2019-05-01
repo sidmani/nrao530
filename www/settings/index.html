@@ -3,32 +3,7 @@
   <script src="/settings.js"></script>
   <link rel="stylesheet" href="/main.css" type="text/css">
   <link rel="stylesheet" href="settings.css" type="text/css">
-  <script>
-    let temp = Settings.get();
-    const items = ['showFPS', 'showPAxis', 'showRAxis'];
-    function save() {
-      Settings.set(temp);
-      window.location = '/';
-    }
 
-    function reset() {
-      temp = Settings.default;
-      applyToInterface();
-    }
-
-    function applyToInterface() {
-      items.forEach(i => {
-        console.log(i);
-        const el = document.getElementById(i);
-        const type = el.getAttribute('type');
-        switch (type) {
-          case 'checkbox':
-            el.checked = items[i];
-            break;
-        }
-      });
-    }
-  </script>
 </head>
 <body>
   <span class="settingsContainer">
@@ -44,9 +19,62 @@
     </div>
     <div class="settingsGroup">
       <p class="title">parameters</p>
+      <p class="division">Precession axis</p>
+      <label><input type="number" id="pAxisTheta" min="0" max="6.28" step="0.01"> 𝜽</label>
+      <label><input type="number" id="pAxisPhi" min="0" max="6.28" step="0.01"> 𝜙</label>
+      <p class="division">Rotation axis</p>
+      <label><input type="number" id="rAxisTheta" min="0" max="6.28" step="0.01"> 𝜽</label>
+      <label><input type="number" id="rAxisPhi" min="0" max="6.28" step="0.01"> 𝜙</label>
+      <br>
+      <label><input type="number" id="emissionVelocity" min="0" max="1" step="0.01"> Emission velocity (1/c)</label>
+       <label><input type="number" id="terminationRadius" min="1" max="1000" step="10"> Termination radius (1000-light years)</label>
+      <label><input type="number" id="precRate" min="0" max="1" step="0.01"> Precession rate (rad/Kyr)</label>
     </div>
     <div class="settingsGroup">
       <p class="title">simulation</p>
     </div>
   </div>
+  <script>
+    let temp = Settings.get();
+    const items = Object.keys(temp);
+    function save() {
+      items.forEach(i => {
+        const el = document.getElementById(i);
+        if (!el) return;
+        const type = el.getAttribute('type');
+        switch (type) {
+          case 'checkbox':
+            temp[i] = el.checked;
+            break;
+          case 'number':
+            temp[i] = parseFloat(el.value);
+            break;
+        }
+      })
+      Settings.set(temp);
+      window.location = '/';
+    }
+
+    function reset() {
+      temp = Settings.default;
+      applyToInterface();
+    }
+
+    function applyToInterface() {
+      items.forEach(i => {
+        const el = document.getElementById(i);
+        if (!el) return;
+        const type = el.getAttribute('type');
+        switch (type) {
+          case 'checkbox':
+            el.checked = temp[i];
+            break;
+          case 'number':
+            el.value = temp[i];
+            break;
+        }
+      });
+    }
+    applyToInterface();
+  </script>
 </body>

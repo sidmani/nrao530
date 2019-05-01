@@ -9,8 +9,8 @@
   <span class="settingsContainer"><a class="btn" href="/settings/">settings</a></span>
   <span class="data">
     <a class="btn" id="btn_play" href="#" onclick="toggleAnimation()">run</a>
-    <a class="btn btn_step" href="#" onclick="s.increment()">step</a>
-    <a class="btn btn_reset" href="#" onclick="reset()">reset</a>
+    <a class="btn" href="#" onclick="s.increment()">step</a>
+    <a class="btn" href="#" onclick="reset()">reset</a>
   </span>
 <script>
     let s;
@@ -38,7 +38,6 @@
       }
       requestAnimationFrame(animate);
     }
-    reset();
     animate();
 </script>
 </body>

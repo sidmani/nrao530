@@ -1,27 +1,16 @@
 const Settings = {
   default: {
-    blackHole: {
-      showPAxis: true,
-      showRAxis: true,
-      pAxis: {
-        theta: 1,
-        phi: 1,
-      },
-      rAxis: {
-        theta: 0,
-        phi: 0,
-      },
-      precRate: 0.1,
-      emissionVelocity: 10,
-    },
-    jets: {
-      terminationRadius: 400,
-      show: true,
-    },
-    sim: {
-      showFPS: true,
-      timescale: 1, // kyr / 60frame
-    },
+    showPAxis: true,
+    showRAxis: true,
+    pAxisTheta: 1,
+    pAxisPhi: 1,
+    rAxisTheta: 0,
+    rAxisPhi: 0,
+    precRate: 0.1,
+    emissionVelocity: 0.2,
+    terminationRadius: 400,
+    showFPS: true,
+    timescale: 1, // kyr / 60frame
   },
 };
 
