@@ -8,7 +8,7 @@ class Jet {
     this.es = settings.emissionVelocity;
     this.group = new t.Group();
 
-    this.numPoints = Math.ceil(this.r / this.es);
+    this.numPoints = Math.ceil(settings.terminationRadius / this.es);
     this.geometry = new t.BufferGeometry();
     const positions = new Float32Array(this.numPoints * 3);
     this.geometry.addAttribute('position', new t.BufferAttribute(positions, 3));
