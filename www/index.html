@@ -16,8 +16,11 @@
     let s;
 
     function reset() {
-      if (s) { document.body.removeChild(s.domElement); }
-      s = new sim.Controller(Settings.get());
+      if (s) {
+        s.dispose();
+        document.body.removeChild(s.domElement);
+      }
+      s = new sim(Settings.get());
       document.body.appendChild(s.domElement);
       s.setAspect(window.innerWidth, window.innerHeight);
     }
@@ -38,6 +41,7 @@
       }
       requestAnimationFrame(animate);
     }
+    reset();
     animate();
 </script>
 </body>

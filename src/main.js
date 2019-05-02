@@ -1,16 +1,19 @@
 const three = require('three');
 const BlackHole = require('./blackHole');
+const JetController = require('./jetController');
 
 class Simulation {
   constructor(settings) {
     this.settings = settings;
     this.scene = new three.Scene();
 
-    this.hole = new BlackHole(settings, o => this.scene.add(o));
+    this.hole = new BlackHole(settings);
+    this.jetController = new JetController(settings);
+    this.scene.add(this.hole.group, this.jetController.group);
 
     const tr = settings.terminationRadius * 2;
-    this.camera = new three.OrthographicCamera(-tr, tr, tr, -tr, 100, 5000);
-    this.camera.position.z = 1000;
+    this.camera = new three.OrthographicCamera(-tr, tr, tr, -tr);
+    this.camera.position.z = settings.terminationRadius * 2;
     this.camera.lookAt(0, 0, 0);
     this.renderer = new three.WebGLRenderer();
 
@@ -19,7 +22,7 @@ class Simulation {
 }
 
 Simulation.prototype.increment = function increment() {
-  this.hole.increment();
+  this.jetController.increment();
   this.renderer.render(this.scene, this.camera);
 };
 
@@ -32,5 +35,8 @@ Simulation.prototype.setAspect = function setAspect(width, height) {
   this.renderer.render(this.scene, this.camera);
 };
 
-module.exports.Controller = Simulation;
-module.exports.gfx = three;
+Simulation.prototype.dispose = function dispose() {
+  this.renderer.dispose();
+};
+
+module.exports = Simulation;
