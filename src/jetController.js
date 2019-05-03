@@ -5,6 +5,16 @@ function sp2rect(theta, phi) {
   return new t.Vector3(Math.sin(theta), Math.sin(phi), Math.cos(theta));
 }
 
+function drawLine(v, r, g, b) {
+  const geom = new t.BufferGeometry();
+  const vertices = [-100 * v.x, -100 * v.y, -100 * v.z, 0, 0, 0, 100 * v.x, 100 * v.y, 100 * v.z];
+  const colors = [r, g, b, r, g, b, r, g, b];
+  geom.addAttribute('position', new t.Float32BufferAttribute(vertices, 3));
+  geom.addAttribute('color', new t.Float32BufferAttribute(colors, 3));
+  const lineMaterial = new t.LineBasicMaterial({ vertexColors: t.VertexColors });
+  return new t.Line(geom, lineMaterial);
+}
+
 class JetController {
   constructor(settings) {
     this.east = new Jet(settings);
@@ -17,6 +27,9 @@ class JetController {
     this.rRate = settings.precRate; // rate of precession (rad / Kyr)
     this.rAxis = sp2rect(settings.rAxisTheta, settings.rAxisPhi).normalize();
     this.rAngle = 0;
+
+    if (settings.showPAxis) this.group.add(drawLine(this.pAxis, 0, 0xff, 0));
+    if (settings.showRAxis) this.group.add(drawLine(this.rAxis, 0, 0, 0xff));
   }
 
   increment() {

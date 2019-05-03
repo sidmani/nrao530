@@ -2,13 +2,14 @@ const Settings = {
   default: {
     showPAxis: true,
     showRAxis: true,
-    pAxisTheta: 1,
-    pAxisPhi: 1,
+    pAxisTheta: 0.2,
+    pAxisPhi: -0.2,
     rAxisTheta: 0,
     rAxisPhi: 0,
-    precRate: 0.1,
+    precRate: 0.001,
     emissionVelocity: 0.2,
     terminationRadius: 400,
+    terminationCoolingFactor: 0.95,
     showFPS: true,
     timescale: 1, // kyr / 60frame
   },

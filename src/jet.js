@@ -3,12 +3,12 @@ const t = require('three');
 class Jet {
   constructor(settings, scale = 1) {
     this.r = settings.terminationRadius;
-
+    this.cf = settings.terminationCoolingFactor;
     this.ev = settings.emissionVelocity;
     this.scale = scale;
     this.group = new t.Group();
 
-    this.numPoints = 2 * Math.ceil(settings.terminationRadius / settings.emissionVelocity);
+    this.numPoints = 3 * Math.ceil(settings.terminationRadius / settings.emissionVelocity);
     this.geometry = new t.BufferGeometry();
     const positions = new Float32Array(this.numPoints * 3);
     const colors = new Float32Array(this.numPoints * 3);
@@ -41,7 +41,7 @@ Jet.prototype.increment = function increment(direction) {
   for (let i = 0; i < this.numPoints; i += 1) {
     const n = 3 * i;
     if (this.framesToEdge[i] === 0) {
-      colors[n] = 0.9 * colors[n];
+      colors[n] *= this.cf;
     } else {
       const s = 1 + 1 / this.framesSinceStart[i];
       positions[n] *= s;
