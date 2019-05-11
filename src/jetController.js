@@ -2,7 +2,7 @@ const t = require('three');
 const Jet = require('./jet');
 
 function sp2rect(theta, phi) {
-  return new t.Vector3(Math.sin(theta), Math.sin(phi), Math.cos(theta));
+  return new t.Vector3(Math.cos(theta) * Math.cos(phi), Math.cos(theta) * Math.sin(phi), Math.sin(theta));
 }
 
 function drawLine(v, r, g, b) {
@@ -29,12 +29,11 @@ class JetController {
     this.rAngle = 0;
 
     if (settings.showPAxis) this.group.add(drawLine(this.pAxis, 0, 0xff, 0));
-    if (settings.showRAxis) this.group.add(drawLine(this.rAxis, 0, 0, 0xff));
   }
 
   increment() {
-    this.east.increment(this.rAxis);
-    this.west.increment(this.rAxis);
+    this.east.increment(this.rAngle, this.rAxis);
+    this.west.increment(this.rAngle, this.rAxis);
     this.rAngle += this.rRate;
     this.rAxis.applyAxisAngle(this.pAxis, this.rRate);
   }

@@ -11,23 +11,25 @@ class Simulation {
     this.jetController = new JetController(settings);
     this.scene.add(this.hole.group, this.jetController.group);
 
-    const tr = settings.terminationRadius * 2;
+    const tr = Math.floor(settings.terminationRadius * 1.2);
     this.camera = new three.OrthographicCamera(-tr, tr, tr, -tr);
     this.camera.position.z = settings.terminationRadius * 2;
     this.camera.lookAt(0, 0, 0);
     this.renderer = new three.WebGLRenderer();
 
     this.domElement = this.renderer.domElement;
+    this.time = 0;
   }
 }
 
 Simulation.prototype.increment = function increment() {
-  this.jetController.increment();
+  this.jetController.increment(this.time);
   this.renderer.render(this.scene, this.camera);
+  this.time += 1;
 };
 
 Simulation.prototype.setAspect = function setAspect(width, height) {
-  const lrPlane = this.settings.terminationRadius * 2 * width / height;
+  const lrPlane = Math.floor(this.settings.terminationRadius * 1.2) * width / height;
   this.camera.left = -lrPlane;
   this.camera.right = lrPlane;
   this.camera.updateProjectionMatrix();

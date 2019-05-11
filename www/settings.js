@@ -4,14 +4,13 @@ const Settings = {
     showRAxis: true,
     pAxisTheta: 0.2,
     pAxisPhi: -0.2,
-    rAxisTheta: 0,
-    rAxisPhi: 0,
-    precRate: 0.001,
+    rAxisTheta: 1.5708,
+    rAxisPhi: 1.5708,
+    precRate: 0.005,
     emissionVelocity: 0.2,
     terminationRadius: 400,
     terminationCoolingFactor: 0.95,
     showFPS: true,
-    timescale: 1, // kyr / 60frame
   },
 };
 
