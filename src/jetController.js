@@ -37,6 +37,11 @@ class JetController {
     this.rAngle += this.rRate;
     this.rAxis.applyAxisAngle(this.pAxis, this.rRate);
   }
+
+  setPointSize(s) {
+    this.east.setPointSize(s);
+    this.west.setPointSize(s);
+  }
 }
 
 module.exports = JetController;

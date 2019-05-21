@@ -13,9 +13,10 @@ class Jet {
     this.geometry = new t.BufferGeometry();
     const positions = new Float32Array(this.numPoints * 3);
     const colors = new Float32Array(this.numPoints * 3);
+
     this.geometry.addAttribute('color', new t.BufferAttribute(colors, 3));
     this.geometry.addAttribute('position', new t.BufferAttribute(positions, 3));
-    const material = new t.PointsMaterial({ vertexColors: t.VertexColors });
+    const material = new t.PointsMaterial({ size: 40, vertexColors: t.VertexColors });
     this.particles = new t.Points(this.geometry, material);
 
     this.next = 0;
@@ -28,6 +29,10 @@ class Jet {
     this.maxBrightness = (1 - settings.emissionVelocity) ** 3.2;
   }
 }
+
+Jet.prototype.setPointSize = function setPointSize(s) {
+  this.particles.material.size = s;
+};
 
 Jet.prototype.increment = function increment(angle, direction) {
   this.updatePoints();
@@ -50,7 +55,7 @@ Jet.prototype.emit = function emit(direction) {
   p[np + 2] = direction.z * adjEV;
 
   // calculate relativistic beaming factor
-  const B = Math.floor(this.maxBrightness / ((1 - this.ev * direction.z) ** 3.2) * 0xff);
+  const B = Math.floor(this.maxBrightness / ((1 - this.ev * direction.z) ** 3.2) * 0xbf) + 0x40;
   c[np] = cm.R[B];
   c[np + 1] = cm.G[B];
   c[np + 2] = cm.B[B];

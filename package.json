@@ -16,6 +16,7 @@
     "tap": "^12.6.2"
   },
   "dependencies": {
+    "postprocessing": "^6.4.0",
     "three": "^0.103.0"
   }
 }

@@ -25,6 +25,7 @@ body {
 }
 
 .data {
+  color: #ff9800;
   position: fixed;
   top: 15px;
   left: 15px;
