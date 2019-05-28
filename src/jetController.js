@@ -24,11 +24,17 @@ class JetController {
     this.group.add(this.east.group, this.west.group);
 
     this.pAxis = sp2rect(settings.pAxisTheta, settings.pAxisPhi).normalize();
-    this.rRate = settings.precRate; // rate of precession (rad / Kyr)
-    this.rAxis = sp2rect(settings.rAxisTheta, settings.rAxisPhi).normalize();
+    this.rRate = settings.precRate / 1000; // rate of precession (rad / Myr)
+    // cross pAxis with k-hat
+    const normal = new t.Vector3(0, 0, 1).cross(this.pAxis).normalize();
+    this.rAxis = this.pAxis.clone().applyAxisAngle(normal, -settings.openingAngle);
     this.rAngle = 0;
+    this.pAxisLine = drawLine(this.pAxis, 0, 0xff, 0);
+    this.group.add(this.pAxisLine);
+  }
 
-    if (settings.showPAxis) this.group.add(drawLine(this.pAxis, 0, 0xff, 0));
+  togglePAxis() {
+    this.pAxisLine.visible = !this.pAxisLine.visible;
   }
 
   increment() {

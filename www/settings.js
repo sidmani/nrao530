@@ -1,16 +1,12 @@
 const Settings = {
   default: {
-    showPAxis: true,
-    showRAxis: true,
-    pAxisTheta: 0.2,
+    pAxisTheta: 1.3,
     pAxisPhi: -0.2,
-    rAxisTheta: 1.5708,
-    rAxisPhi: 1.5708,
-    precRate: 0.005,
+    openingAngle: 0.2708,
+    precRate: 5,
     emissionVelocity: 0.2,
     terminationRadius: 400,
     terminationCoolingFactor: 0.95,
-    showFPS: true,
   },
 };
 

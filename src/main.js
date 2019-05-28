@@ -23,7 +23,7 @@ class Simulation {
 
     this.renderPass = new pp.RenderPass(this.scene, this.camera);
     this.blurPass = new pp.BlurPass();
-    this.blurPass.kernelSize = pp.KernelSize.LARGE;
+    this.blurPass.kernelSize = pp.KernelSize.MEDIUM;
     this.blurPass.renderToScreen = true;
     this.composer.addPass(this.renderPass);
     this.composer.addPass(this.blurPass);
@@ -32,21 +32,30 @@ class Simulation {
     this.domElement = renderer.domElement;
     this.time = 0;
   }
+
+  render() {
+    this.composer.render(this.clock.getDelta());
+  }
+
+  toggleBlur() {
+    const val = this.blurPass.enabled;
+    this.blurPass.enabled = !val;
+    this.renderPass.renderToScreen = val;
+    this.blurPass.renderToScreen = !val;
+    this.jetController.setPointSize(val ? 1 : 40);
+    this.render();
+  }
 }
 
-Simulation.prototype.toggleBlur = function toggleBlur() {
-  const val = this.blurPass.enabled;
-  this.blurPass.enabled = !val;
-  this.renderPass.renderToScreen = val;
-  this.blurPass.renderToScreen = !val;
-  this.jetController.setPointSize(val ? 1 : 40);
-  this.composer.render(this.clock.getDelta());
+Simulation.prototype.togglePAxis = function togglePAxis() {
+  this.jetController.togglePAxis();
+  this.render();
 };
 
 Simulation.prototype.increment = function increment() {
   this.jetController.increment(this.time);
-  this.composer.render(this.clock.getDelta());
   this.time += 1;
+  this.render();
 };
 
 Simulation.prototype.setAspect = function setAspect(width, height) {
@@ -55,7 +64,7 @@ Simulation.prototype.setAspect = function setAspect(width, height) {
   this.camera.right = lrPlane;
   this.camera.updateProjectionMatrix();
   this.composer.setSize(width, height);
-  this.composer.render(this.clock.getDelta());
+  this.render();
 };
 
 module.exports = Simulation;
