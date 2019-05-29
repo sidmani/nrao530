@@ -1,5 +1,4 @@
 const t = require('three');
-const cm = require('./colorMap');
 
 class Jet {
   constructor(settings, scale = 1) {
@@ -7,7 +6,6 @@ class Jet {
     this.cf = settings.terminationCoolingFactor;
     this.ev = settings.emissionVelocity * scale;
 
-    // figure out when strike time switches inc -> dec etc
     this.numPoints = 3 * Math.ceil(this.r / settings.emissionVelocity);
 
     this.geometry = new t.BufferGeometry();
@@ -16,12 +14,11 @@ class Jet {
 
     this.geometry.addAttribute('color', new t.BufferAttribute(colors, 3));
     this.geometry.addAttribute('position', new t.BufferAttribute(positions, 3));
-    const material = new t.PointsMaterial({ size: 40, vertexColors: t.VertexColors });
+    const material = new t.PointsMaterial({ size: 15, vertexColors: t.VertexColors, blending: t.NormalBlending });
     this.particles = new t.Points(this.geometry, material);
 
     this.next = 0;
     this.available = [];
-    this.cIdx = new Uint8Array(this.numPoints);
     this.framesToEdge = new Float32Array(this.numPoints);
     this.framesSinceStart = new Float32Array(this.numPoints);
     this.group = this.particles;
@@ -55,11 +52,7 @@ Jet.prototype.emit = function emit(direction) {
   p[np + 2] = direction.z * adjEV;
 
   // calculate relativistic beaming factor
-  const B = Math.floor(this.maxBrightness / ((1 - this.ev * direction.z) ** 3.2) * 0xbf) + 0x40;
-  c[np] = cm.R[B];
-  c[np + 1] = cm.G[B];
-  c[np + 2] = cm.B[B];
-  this.cIdx[k] = B;
+  c[np + 1] = this.maxBrightness / ((1 - this.ev * direction.z) ** 3.2);
 
   this.framesSinceStart[k] = 1;
   this.framesToEdge[k] = Math.ceil(Math.abs(this.r / adjEV));
@@ -79,20 +72,17 @@ Jet.prototype.updatePoints = function updatePoints() {
       this.framesSinceStart[i] += 1;
       this.framesToEdge[i] -= 1;
     } else if (this.framesToEdge[i] === 0) {
-      this.cIdx[i] = 0xff;
+      c[n + 1] = 1;
       this.framesToEdge[i] = -1;
     } else if (this.framesToEdge[i] === -1) {
-      if (this.cIdx[i] < 20) {
+      if (c[n + 1] < 0.05) {
         p[n] = 0;
         p[n + 1] = 0;
         p[n + 2] = 0;
         this.available.push(i);
         this.framesToEdge[i] = -2;
       } else {
-        const x = this.cIdx[i]--;
-        c[n] = cm.R[x];
-        c[n + 1] = cm.G[x];
-        c[n + 2] = cm.B[x];
+        c[n + 1] *= this.cf;
       }
     }
   }

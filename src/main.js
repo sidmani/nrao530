@@ -1,6 +1,7 @@
 const three = require('three');
 const pp = require('postprocessing');
 
+const Shader = require('./shader.js');
 const BlackHole = require('./blackHole');
 const JetController = require('./jetController');
 
@@ -23,10 +24,13 @@ class Simulation {
 
     this.renderPass = new pp.RenderPass(this.scene, this.camera);
     this.blurPass = new pp.BlurPass();
-    this.blurPass.kernelSize = pp.KernelSize.MEDIUM;
-    this.blurPass.renderToScreen = true;
+    this.blurPass.kernelSize = pp.KernelSize.LARGE;
+    this.effectPass = new pp.EffectPass(this.camera, new Shader());
+    this.effectPass.renderToScreen = true;
+
     this.composer.addPass(this.renderPass);
     this.composer.addPass(this.blurPass);
+    this.composer.addPass(this.effectPass);
     this.clock = new three.Clock();
 
     this.domElement = renderer.domElement;
@@ -40,9 +44,7 @@ class Simulation {
   toggleBlur() {
     const val = this.blurPass.enabled;
     this.blurPass.enabled = !val;
-    this.renderPass.renderToScreen = val;
-    this.blurPass.renderToScreen = !val;
-    this.jetController.setPointSize(val ? 1 : 40);
+    this.jetController.setPointSize(val ? 1 : 15);
     this.render();
   }
 }
