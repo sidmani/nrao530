@@ -6,7 +6,7 @@ const Settings = {
     precRate: 5,
     emissionVelocity: 0.2,
     terminationRadius: 400,
-    terminationCoolingFactor: 0.95,
+    terminationCoolingFactor: 0.99,
   },
 };
 

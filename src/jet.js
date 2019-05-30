@@ -14,14 +14,20 @@ class Jet {
 
     this.geometry.addAttribute('color', new t.BufferAttribute(colors, 3));
     this.geometry.addAttribute('position', new t.BufferAttribute(positions, 3));
-    const material = new t.PointsMaterial({ size: 15, vertexColors: t.VertexColors, blending: t.NormalBlending });
+    const material = new t.PointsMaterial({
+      size: 15,
+      vertexColors: t.VertexColors,
+      blending: t.CustomBlending,
+      blendEquation: t.MaxEquation,
+      transparent: true,
+      depthWrite: false,
+    });
     this.particles = new t.Points(this.geometry, material);
 
     this.next = 0;
     this.available = [];
     this.framesToEdge = new Float32Array(this.numPoints);
     this.framesSinceStart = new Float32Array(this.numPoints);
-    this.group = this.particles;
 
     this.maxBrightness = (1 - settings.emissionVelocity) ** 3.2;
   }
@@ -43,7 +49,8 @@ Jet.prototype.emit = function emit(direction) {
   const p = this.particles.geometry.attributes.position.array;
   const c = this.particles.geometry.attributes.color.array;
 
-  const adjEV = this.ev / (1 - direction.z * this.ev);
+  const factor = (1 - direction.z * this.ev);
+  const adjEV = this.ev / factor;
   const k = this.available.pop() || this.next++;
   const np = k * 3;
 
@@ -52,8 +59,7 @@ Jet.prototype.emit = function emit(direction) {
   p[np + 2] = direction.z * adjEV;
 
   // calculate relativistic beaming factor
-  c[np + 1] = this.maxBrightness / ((1 - this.ev * direction.z) ** 3.2);
-
+  c[np] = this.maxBrightness / (factor ** 3.2);
   this.framesSinceStart[k] = 1;
   this.framesToEdge[k] = Math.ceil(Math.abs(this.r / adjEV));
 };
@@ -62,7 +68,7 @@ Jet.prototype.updatePoints = function updatePoints() {
   const p = this.particles.geometry.attributes.position.array;
   const c = this.particles.geometry.attributes.color.array;
 
-  for (let i = 0; i < this.next; i += 1) {
+  for (let i = 0; i < this.next; i++) {
     const n = 3 * i;
     if (this.framesToEdge[i] > 0) {
       const s = 1 + 1 / this.framesSinceStart[i];
@@ -72,17 +78,18 @@ Jet.prototype.updatePoints = function updatePoints() {
       this.framesSinceStart[i] += 1;
       this.framesToEdge[i] -= 1;
     } else if (this.framesToEdge[i] === 0) {
-      c[n + 1] = 1;
+      c[n] = 1;
       this.framesToEdge[i] = -1;
     } else if (this.framesToEdge[i] === -1) {
-      if (c[n + 1] < 0.05) {
+      if (c[n] < 0.001) {
         p[n] = 0;
         p[n + 1] = 0;
         p[n + 2] = 0;
+        c[n] = 1;
         this.available.push(i);
         this.framesToEdge[i] = -2;
       } else {
-        c[n + 1] *= this.cf;
+        c[n] *= this.cf;
       }
     }
   }

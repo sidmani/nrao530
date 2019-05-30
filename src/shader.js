@@ -22,28 +22,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+const t = require('three');
 const pp = require('postprocessing');
 
 const fragment = `
+uniform float high;
+uniform float low;
+
 vec4 colormap(float x) {
-    float r = clamp(8.0 / 3.0 * x, 0.0, 1.0);
-    float g = clamp(8.0 / 3.0 * x - 1.0, 0.0, 1.0);
-    float b = clamp(4.0 * x - 3.0, 0.0, 1.0);
-    return vec4(r, g, b, 1.0);
+  x = clamp(x, low, high);
+  x = (x - low) / (high - low);
+  float r = clamp(8.0 / 3.0 * x, 0.0, 1.0);
+  float g = clamp(8.0 / 3.0 * x - 1.0, 0.0, 1.0);
+  float b = clamp(4.0 * x - 3.0, 0.0, 1.0);
+  return vec4(r, g, b, 1.0);
 }
 
 void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
-  if (inputColor.g == 0.0) {
-    outputColor = vec4(0.0);
-  } else {
-    outputColor = colormap(inputColor.g);
-  }
+  outputColor = colormap(inputColor.r);
 }
 `;
 
 class IntensityMap extends pp.Effect {
   constructor() {
-    super('IntensityMap', fragment);
+    super('IntensityMap', fragment, { uniforms: new Map([['low', new t.Uniform(0)], ['high', new t.Uniform(1)]]) });
+  }
+
+  setLow(val) {
+    this.uniforms.get('low').value = val;
+  }
+
+  setHigh(val) {
+    this.uniforms.get('high').value = val;
   }
 }
 
