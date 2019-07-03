@@ -11,12 +11,12 @@
   "license": "UNLICENSED",
   "devDependencies": {
     "eslint": "^5.16.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.17.2",
-    "tap": "^12.6.2"
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-import": "^2.18.0",
+    "tap": "^12.7.0"
   },
   "dependencies": {
-    "postprocessing": "^6.4.0",
+    "postprocessing": "^6.5.1",
     "three": "^0.103.0"
   }
 }
