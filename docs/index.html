@@ -1,0 +1,54 @@
+<!doctype html>
+<head>
+  <title>NRAO-530 Simulation</title>
+  <meta charset="utf-8">
+  <script src="bundle.js"></script>
+  <script src="settings.js"></script>
+  <link rel="stylesheet" href="main.css" type="text/css">
+</head>
+<body>
+  <span class="settingsContainer"><a class="btn" href="/settings/">settings</a></span>
+  <span class="data">
+    <a class="btn" id="btn_play" href="#" onclick="toggleAnimation()">run</a>
+    <a class="btn" href="#" onclick="s.increment()">step</a>
+    <a class="btn" href="#" onclick="reset()">reset</a>
+    <br><br>
+    <label><input type="checkbox" onclick="s.toggleBlur()" checked> Convolution</label><br>
+    <label style="color: #0f0"><input type="checkbox" onclick="s.toggle('pAxis')" checked> Precession axis</label><br>
+    <label style="color: #f00"><input type="checkbox" onclick="s.toggle('rAxis')" checked> Emission axis</label><br>
+    <label><input type="range" min="0" max="1000" value="0" oninput="s.setLow(this.value / 1000)"> colorscale low</label><br>
+    <label><input type="range" min="0" max="1000" value="1000" oninput="s.setHigh(this.value / 1000)"> colorscale high</label>
+  </span>
+<script>
+    let s;
+
+    function reset() {
+      if (s) {
+        s.dispose();
+        document.body.removeChild(s.domElement);
+      }
+      s = new sim(Settings.get());
+      document.body.appendChild(s.domElement);
+      s.setAspect(window.innerWidth, window.innerHeight);
+    }
+
+    window.addEventListener('resize', function () {
+      s.setAspect(window.innerWidth, window.innerHeight);
+    });
+
+    let shouldAnimate = false;
+    function toggleAnimation() {
+      shouldAnimate = !shouldAnimate;
+      document.getElementById('btn_play').innerHTML = shouldAnimate ? 'stop' : 'run';
+    }
+
+    function animate() {
+      if (shouldAnimate) {
+        s.increment();
+      }
+      requestAnimationFrame(animate);
+    }
+    reset();
+    animate();
+</script>
+</body>
