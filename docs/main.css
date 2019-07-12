@@ -5,6 +5,17 @@ body {
   font-family: monospace;
 }
 
+.ref {
+  color: #ff9800;
+  position: fixed;
+  left: 15px;
+  bottom: 15px;
+}
+
+a {
+  color: #fff;
+}
+
 .sim {
   height: 100%;
   width: 100%;
